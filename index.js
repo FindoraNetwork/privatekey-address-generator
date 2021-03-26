@@ -26,25 +26,19 @@ inquirer.prompt([numberPrompt]).then((answers) => {
   const amount = Number(answers.amount);
   const { keyStore, address } = create_keyStore(amount);
 
-  const keyStoreFileName = `findora_wallet_${amount}_private_keys_at_${Date.now()}.txt`;
-  const keyStoreSavePath = path.join(desktopPath, keyStoreFileName);
+  const savePath = path.join(desktopPath, `findora_wallet_at_${Date.now()}`);
 
-  fs.writeFile(keyStoreSavePath, keyStore, () => {
+  try {
+    fs.mkdirSync(savePath);
+    fs.writeFileSync(path.join(savePath, "private.txt"), keyStore);
+    fs.writeFileSync(path.join(savePath, "address.txt"), address);
+
     console.log("\n");
-    console.log(
-      "PrivateKeys: The creation is complete, the file has been saved"
-    );
-    console.log(`File location: ${keyStoreSavePath}`);
-  });
-
-  const addressFileName = `findora_wallet_${amount}_address_at_${Date.now()}.txt`;
-  const addressSavePath = path.join(desktopPath, addressFileName);
-
-  fs.writeFile(addressSavePath, address, () => {
-    console.log("\n");
-    console.log("Address: The creation is complete, the file has been saved");
-    console.log(`File location: ${addressSavePath}`);
-  });
+    console.log("The creation is complete, the file has been saved");
+    console.log(`File location: ${savePath}`);
+  } catch (_) {
+    console.log("Failed to create");
+  }
 });
 
 function create_keyStore(amount) {
