@@ -4,6 +4,9 @@
   "description": "privatekey-address-generator",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node ./index.js"
+  },
   "dependencies": {
     "inquirer": "^8.0.0"
   }

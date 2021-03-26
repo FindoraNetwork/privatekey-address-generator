@@ -8,14 +8,14 @@ const desktopPath = path.join(os.homedir(), "Desktop");
 
 const numberPrompt = {
   type: "input",
-  message: "请输入创建私钥的数量",
+  message: "Please enter the number of private keys to be created",
   name: "amount",
   default: "1",
   validate: (amount) => {
     if (!/(^[1-9]\d*$)/.test(amount)) {
-      return "请输入正整数";
+      return "Please enter a positive integer";
     } else if (amount > 100) {
-      return "一次，最多创建100个";
+      return "Create up to 100 at a time";
     } else {
       return true;
     }
@@ -25,17 +25,13 @@ const numberPrompt = {
 inquirer.prompt([numberPrompt]).then((answers) => {
   const amount = Number(answers.amount);
   const result = create_keyStore(amount);
-  let fileName = new Date().toLocaleString();
-  fileName = fileName.replace(
-    /[^\d{1,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}].*/g,
-    ""
-  );
-  fileName = fileName + "- findora-wallet (" + amount + ")";
 
-  const savePath = path.join(desktopPath, `${fileName}.txt`);
+  const fileName = `findora_wallet_${amount}_private_keys_at_${Date.now()}.txt`;
+  const savePath = path.join(desktopPath, fileName);
+
   fs.writeFile(savePath, result, function (err) {
-    console.log("创建完毕, 文件已保存");
-    console.log(`位置：${savePath}`);
+    console.log("The creation is complete, the file has been saved");
+    console.log(`File location: ${savePath}`);
   });
 });
 
