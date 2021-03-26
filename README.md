@@ -1,5 +1,6 @@
 ## Create Findora Wallet private key scripts in batches.
-
+### Install Nodejs
+https://nodejs.org/
 ### Execute the command line:
 
 ```bash
