@@ -24,19 +24,32 @@ const numberPrompt = {
 
 inquirer.prompt([numberPrompt]).then((answers) => {
   const amount = Number(answers.amount);
-  const result = create_keyStore(amount);
+  const { keyStore, address } = create_keyStore(amount);
 
-  const fileName = `findora_wallet_${amount}_private_keys_at_${Date.now()}.txt`;
-  const savePath = path.join(desktopPath, fileName);
+  const keyStoreFileName = `findora_wallet_${amount}_private_keys_at_${Date.now()}.txt`;
+  const keyStoreSavePath = path.join(desktopPath, keyStoreFileName);
 
-  fs.writeFile(savePath, result, function (err) {
-    console.log("The creation is complete, the file has been saved");
-    console.log(`File location: ${savePath}`);
+  fs.writeFile(keyStoreSavePath, keyStore, () => {
+    console.log("\n");
+    console.log(
+      "PrivateKeys: The creation is complete, the file has been saved"
+    );
+    console.log(`File location: ${keyStoreSavePath}`);
+  });
+
+  const addressFileName = `findora_wallet_${amount}_address_at_${Date.now()}.txt`;
+  const addressSavePath = path.join(desktopPath, addressFileName);
+
+  fs.writeFile(addressSavePath, address, () => {
+    console.log("\n");
+    console.log("Address: The creation is complete, the file has been saved");
+    console.log(`File location: ${addressSavePath}`);
   });
 });
 
 function create_keyStore(amount) {
   let keyStore = "";
+  let address = "";
 
   for (let i = 0; i < amount; i++) {
     const keypair = wasm.new_keypair();
@@ -48,8 +61,10 @@ function create_keyStore(amount) {
     let private = wasm.get_priv_key_str(keypair);
     private = private.replace(/\"/g, "");
 
-    keyStore += `\naddress: ${publickey}\nprivate: ${private}\n`;
+    keyStore += `\n${publickey}\n${private}\n`;
+
+    address += `\n${publickey}\n`;
   }
 
-  return keyStore;
+  return { keyStore, address };
 }
