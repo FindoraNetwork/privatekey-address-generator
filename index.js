@@ -1,6 +1,10 @@
 const inquirer = require("inquirer");
 const wasm = require("./lib/wasm");
 const fs = require("fs");
+const path = require("path");
+const os = require("os");
+
+const desktopPath = path.join(os.homedir(), "Desktop");
 
 const numberPrompt = {
   type: "input",
@@ -27,11 +31,11 @@ inquirer.prompt([numberPrompt]).then((answers) => {
     ""
   );
   fileName = fileName + "- findora-wallet (" + amount + ")";
-  console.log(result);
 
-  fs.writeFile(`${fileName}.txt`, result, function (err) {
+  const savePath = path.join(desktopPath, `${fileName}.txt`);
+  fs.writeFile(savePath, result, function (err) {
     console.log("创建完毕, 文件已保存");
-    console.log(`位置：${process.cwd()}/${fileName}.txt`);
+    console.log(`位置：${savePath}`);
   });
 });
 
