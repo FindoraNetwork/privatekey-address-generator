@@ -46,7 +46,11 @@ function create_keyStore(amount) {
   let address = "";
 
   for (let i = 0; i < amount; i++) {
-    const keypair = wasm.new_keypair();
+    const mnemonic = String(wasm.generate_mnemonic_custom(24, "en")).split(" ");
+
+    const keypair = wasm.restore_keypair_from_mnemonic_default(
+      mnemonic.join(" ")
+    );
 
     const publickey = wasm.public_key_to_bech32(
       wasm.get_pk_from_keypair(keypair)
@@ -55,7 +59,7 @@ function create_keyStore(amount) {
     let private = wasm.get_priv_key_str(keypair);
     private = private.replace(/\"/g, "");
 
-    keyStore += `\n${publickey}\n${private}\n`;
+    keyStore += `\n${mnemonic}\n${publickey}\n${private}\n`;
 
     address += `\n${publickey}\n`;
   }
